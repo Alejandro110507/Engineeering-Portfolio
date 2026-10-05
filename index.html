@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alejandro Pose Santana · Engineering Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --mist:#f2f3f4; --fog:#e6e8ea; --rule:#d5d9dd;
+  --steel:#9aa0a7; --graphite:#5e646b; --ink:#1f2328;
+  --focus:#1f2328;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+/* The brief asks for a white-and-grey site, so both theme branches keep that palette. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#ffffff; --mist:#f2f3f4; --fog:#e6e8ea; --rule:#d5d9dd;
+    --steel:#9aa0a7; --graphite:#5e646b; --ink:#1f2328;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#ffffff; --mist:#f2f3f4; --fog:#e6e8ea; --rule:#d5d9dd;
+  --steel:#9aa0a7; --graphite:#5e646b; --ink:#1f2328;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-variation-settings:"wdth" 100;
+  font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+img,canvas,svg{max-width:100%}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+
+/* Navigation */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:56px}
+.mark{font-weight:750;font-variation-settings:"wdth" 118;letter-spacing:-.01em;text-decoration:none;white-space:nowrap}
+.nav ul{display:flex;gap:22px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.l{text-decoration:none;color:var(--graphite);font-size:15px;white-space:nowrap}
+.nav a.l:hover{color:var(--ink)}
+@media (max-width:720px){.mark{display:none}.nav ul{margin:0}}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(40px,7vw,88px) 0 clamp(32px,5vw,64px)}
+.hero h1{margin:0;font-weight:780;font-variation-settings:"wdth" 125;font-size:clamp(2.7rem,7.2vw,5.9rem);line-height:.92;letter-spacing:-.025em}
+.hero h1 span{display:block;color:var(--graphite);font-weight:340}
+.lede{max-width:34em;margin:28px 0 0;font-size:clamp(1.05rem,1.6vw,1.2rem);color:var(--ink)}
+.facts{margin:20px 0 0;color:var(--graphite);font-size:15px;max-width:36em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border:1px solid var(--ink);border-radius:999px;
+  background:var(--ink);color:var(--paper);text-decoration:none;font:inherit;font-size:15px;font-weight:560;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.stage{position:relative;aspect-ratio:1/1;width:100%;max-height:560px;border-radius:8px;
+  background:radial-gradient(circle at 50% 45%,var(--paper) 0,var(--mist) 70%);border:1px solid var(--rule);overflow:hidden;touch-action:pan-y;cursor:grab}
+.stage:active{cursor:grabbing}
+.stage canvas{display:block;width:100%!important;height:100%!important}
+.hint{position:absolute;left:14px;bottom:12px;font-size:13px;color:var(--graphite);pointer-events:none}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--graphite);font-size:15px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.hero .stage{aspect-ratio:4/3}}
+
+/* Work sections */
+.work{display:grid;grid-template-columns:1fr 1.08fr;gap:clamp(24px,4.5vw,64px);padding:clamp(48px,7vw,96px) 0;border-top:1px solid var(--rule);align-items:start}
+.work.flip .text{order:2}
+.work.flip figure{order:1}
+@media (max-width:900px){.work{grid-template-columns:1fr}.work.flip .text{order:1}.work.flip figure{order:2}}
+.org{margin:0 0 10px;color:var(--graphite);font-size:15px}
+.work h2{margin:0;font-weight:720;font-variation-settings:"wdth" 112;font-size:clamp(1.75rem,3.4vw,2.6rem);line-height:1.04;letter-spacing:-.018em;max-width:16em}
+.role{margin:14px 0 0;color:var(--graphite);font-size:15px}
+.work h3{margin:30px 0 10px;font-size:15px;font-weight:650;font-variation-settings:"wdth" 108;color:var(--ink)}
+.work ul.act{margin:0;padding:0;list-style:none;max-width:38em}
+.work ul.act li{position:relative;padding:9px 0 9px 22px;border-top:1px solid var(--fog)}
+.work ul.act li::before{content:"";position:absolute;left:2px;top:19px;width:9px;height:1.5px;background:var(--steel)}
+.work ul.act li:first-child{border-top:0}
+table.spec{width:100%;max-width:38em;border-collapse:collapse;font-size:15.5px}
+table.spec th,table.spec td{text-align:left;padding:9px 0;border-top:1px solid var(--rule);vertical-align:top}
+table.spec th{font-weight:450;color:var(--graphite);width:42%;padding-right:16px}
+table.spec td{font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:24px 0 0;padding:0;list-style:none}
+.tags li{font-size:14px;padding:4px 11px;border-radius:999px;background:var(--mist);color:var(--ink);border:1px solid var(--fog)}
+
+figure{margin:0}
+.viz{position:relative;aspect-ratio:5/4;width:100%;border:1px solid var(--rule);border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg,var(--paper),var(--mist));touch-action:pan-y;cursor:grab}
+.viz:active{cursor:grabbing}
+.viz canvas{display:block;width:100%!important;height:100%!important}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:14px}
+.controls label{font-size:15px;color:var(--graphite);display:flex;align-items:center;gap:10px}
+figcaption{margin-top:12px;font-size:14px;color:var(--graphite);max-width:40em}
+input[type=range]{accent-color:var(--ink);width:min(260px,60vw);min-height:32px}
+
+/* Hysteresis panel */
+.loop{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px;border:1px solid var(--rule);border-radius:8px;padding:14px;background:var(--paper)}
+.loop svg{width:100%;height:auto;max-height:230px;display:block}
+.readout{font-size:15px;color:var(--graphite)}
+.readout b{color:var(--ink);font-weight:650}
+
+/* Process stepper (a true sequence, so it is numbered) */
+.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;counter-reset:s}
+.steps button{width:100%;min-height:52px;font:inherit;font-size:13px;line-height:1.15;padding:6px 4px;border:1px solid var(--rule);border-radius:6px;
+  background:var(--paper);color:var(--graphite);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.steps button .n{font-weight:700;font-variation-settings:"wdth" 120;color:var(--ink);font-size:15px}
+.steps button[aria-current="step"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.steps button[aria-current="step"] .n{color:var(--paper)}
+.steps button.done{background:var(--mist)}
+@media (max-width:560px){.steps{grid-template-columns:repeat(4,1fr)}}
+.stepnote{margin:12px 0 0;min-height:3.2em;font-size:15.5px}
+.stepnote b{font-weight:650}
+
+/* Pack comparison */
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:3px;background:var(--paper)}
+.seg button{min-height:38px;padding:0 16px;border:0;border-radius:999px;background:transparent;font:inherit;font-size:15px;color:var(--graphite);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.packstats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:14px;border-top:1px solid var(--rule)}
+.packstats div{padding:10px 12px 0 0}
+.packstats dt{font-size:13.5px;color:var(--graphite)}
+.packstats dd{margin:2px 0 0;font-size:1.35rem;font-weight:700;font-variation-settings:"wdth" 115}
+
+/* Signal demo */
+.sig3d{margin-top:14px;aspect-ratio:16/10}
+.sigcap{margin:10px 0 0;font-size:14px;color:var(--graphite);max-width:40em}
+.chart{margin-top:14px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);padding:10px}
+.chart canvas{display:block;width:100%;height:240px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:8px 2px 0;font-size:13.5px;color:var(--graphite)}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--ink);vertical-align:middle;margin-right:6px}
+.legend i.p{border-top-color:var(--steel);border-top-width:1.5px}
+.legend i.l{border-top:2px dashed var(--graphite)}
+
+/* Skills and education */
+.band{padding:clamp(48px,7vw,96px) 0;border-top:1px solid var(--rule)}
+.band h2{margin:0 0 28px;font-weight:720;font-variation-settings:"wdth" 112;font-size:clamp(1.75rem,3.4vw,2.6rem);letter-spacing:-.018em}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 40px;margin:0}
+.skills div{padding:14px 0;border-top:1px solid var(--rule)}
+.skills dt{font-weight:650;margin-bottom:4px}
+.skills dd{margin:0;color:var(--graphite)}
+.edu{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px 40px}
+.edu h3{margin:0 0 4px;font-size:1.15rem;font-weight:680}
+.edu p{margin:0;color:var(--graphite)}
+footer{border-top:1px solid var(--rule);padding:40px 0 56px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:baseline;justify-content:space-between}
+footer p{margin:0;color:var(--graphite);font-size:15px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="mark" href="#top">A. Pose Santana</a>
+    <ul>
+      <li><a class="l" href="#nino">Research</a></li>
+      <li><a class="l" href="#scro">Fabrication</a></li>
+      <li><a class="l" href="#gator">Motorsports</a></li>
+      <li><a class="l" href="#iot">Leadership</a></li>
+      <li><a class="l" href="#skills">Skills</a></li>
+      <li><a class="l" href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="top" class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>Alejandro<span>Pose Santana</span></h1>
+      <p class="lede">Electrical engineering student at the University of Florida. I characterize ferroelectric devices, fabricate MOS structures in the cleanroom, and build battery and FPGA hardware.</p>
+      <p class="facts">B.S. in Electrical and Electronics Engineering. Expected Graduation Date: May 2029. GPA 3.59/4.00.</p>
+      <div class="actions">
+        <a class="btn" href="mailto:alejandropose@outlook.com">Email me</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/alejandro-pose-santana-019452268" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://github.com/Alejandro110507" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="stage" id="v-hero" tabindex="0" role="img" aria-label="3D model of a chip package. Drag or use arrow keys to rotate.">
+      <span class="hint">Drag to rotate</span>
+    </div>
+  </header>
+
+  <!-- Nino Research Group -->
+  <section class="work" id="nino" aria-labelledby="h-nino">
+    <div class="text">
+      <p class="org">Nino Research Group, Gainesville, FL</p>
+      <h2 id="h-nino">Ferroelectric capacitors under gamma radiation</h2>
+      <p class="role">Undergraduate Researcher, Nanomaterials &amp; Device Characterization. Aug. 2026 to present.</p>
+      <h3>Action</h3>
+      <ul class="act">
+        <li>Characterize HZO-based metal-ferroelectric-metal (MFM) capacitors through probe station measurements.</li>
+        <li>Analyze hysteresis behavior under gamma radiation to assess ferroelectric device reliability.</li>
+        <li>Created a standardized rubric for the lab's standard operating procedures.</li>
+      </ul>
+      <h3>Result</h3>
+      <table class="spec">
+        <tr><th scope="row">Devices</th><td>HZO MFM capacitors</td></tr>
+        <tr><th scope="row">Stress condition</th><td>Gamma radiation exposure</td></tr>
+        <tr><th scope="row">Measurement</th><td>Probe station hysteresis</td></tr>
+        <tr><th scope="row">Documentation</th><td>Rubric covering 10+ lab SOPs</td></tr>
+      </table>
+      <ul class="tags" aria-label="Skills"><li>Probe Station Measurement</li><li>Ferroelectrics</li><li>Reliability Analysis</li></ul>
+    </div>
+    <figure>
+      <div class="viz" id="v-mfm" tabindex="0" role="img" aria-label="3D model of a metal-ferroelectric-metal capacitor stack with polarization dipoles. Drag to rotate.">
+        <span class="hint">Drag to rotate</span>
+      </div>
+      <div class="loop">
+        <svg id="pe" viewBox="0 0 320 210" role="img" aria-label="Polarization versus electric field hysteresis loop with the current operating point."></svg>
+        <div class="controls">
+          <label for="efield">Applied field <input id="efield" type="range" min="-100" max="100" value="0"></label>
+          <button class="btn ghost" id="sweep" type="button">Run a full sweep</button>
+        </div>
+        <p class="readout" id="pe-read" aria-live="polite"></p>
+      </div>
+      <figcaption>Move the field and watch the dipoles in the HZO layer switch. The loop is an idealized illustration of ferroelectric switching, not measured data.</figcaption>
+    </figure>
+  </section>
+
+  <!-- SCRO -->
+  <section class="work flip" id="scro" aria-labelledby="h-scro">
+    <div class="text">
+      <p class="org">SCRO Semiconductor Device Processing Lab, Gainesville, FL</p>
+      <h2 id="h-scro">MOSCAP and TLM structures, built end to end</h2>
+      <p class="role">Undergraduate Researcher, Semiconductor Fabrication. Summer 2026.</p>
+      <h3>Action</h3>
+      <ul class="act">
+        <li>Fabricated MOSCAP and transmission line measurement (TLM) structures in a cleanroom through oxidation, lithography, etching, metallization and annealing.</li>
+        <li>Grew 40 nm of dry thermal SiO<sub>2</sub> at 1000 °C, verified by Filmetrics, and patterned AZ1512 positive and nLOF2035 negative resists on a Suss MJB3 mask aligner.</li>
+        <li>Etched oxide windows with 6:1 BOE and SF<sub>6</sub> RIE, evaporated Al at about 10<sup>−4</sup> Torr, performed liftoff, and annealed at 550 °C in N<sub>2</sub>.</li>
+        <li>Probed MOSCAP capacitance and TLM resistance.</li>
+      </ul>
+      <h3>Result</h3>
+      <table class="spec">
+        <tr><th scope="row">Structures</th><td>MOSCAP and TLM</td></tr>
+        <tr><th scope="row">Gate oxide</th><td>40 nm dry SiO<sub>2</sub> at 1000 °C</td></tr>
+        <tr><th scope="row">Contacts</th><td>Al, annealed at 550 °C in N<sub>2</sub></td></tr>
+        <tr><th scope="row">Validation</th><td>Device and contact quality confirmed by probing</td></tr>
+      </table>
+      <ul class="tags" aria-label="Skills"><li>Photolithography</li><li>Etching</li><li>Device Testing</li></ul>
+    </div>
+    <figure>
+      <div class="viz" id="v-fab" tabindex="0" role="img" aria-label="3D cross-section of a silicon wafer showing the current process step. Drag to rotate.">
+        <span class="hint">Drag to rotate</span>
+      </div>
+      <ol class="steps" id="steps" aria-label="Process flow"></ol>
+      <p class="stepnote" id="stepnote" aria-live="polite"></p>
+      <div class="controls">
+        <button class="btn ghost" id="prev" type="button">Previous step</button>
+        <button class="btn" id="next" type="button">Next step</button>
+      </div>
+      <figcaption>Step through the process flow on a simplified cross-section. Layer thicknesses are exaggerated so each step is visible.</figcaption>
+    </figure>
+  </section>
+
+  <!-- Gator Motorsports -->
+  <section class="work" id="gator" aria-labelledby="h-gator">
+    <div class="text">
+      <p class="org">Gator Motorsports (Formula SAE), Gainesville, FL</p>
+      <h2 id="h-gator">Battery models and pack architecture for a Formula SAE car</h2>
+      <p class="role">Battery Pack Systems Engineer. Aug. 2025 to Aug. 2026.</p>
+      <h3>Action</h3>
+      <ul class="act">
+        <li>Built Python models from experimental data mapping state of charge (SoC) to DC internal resistance.</li>
+        <li>Extracted R<sub>0</sub>, R<sub>1</sub> and C<sub>1</sub> equivalent-circuit parameters from HPPC pulse-relaxation testing.</li>
+        <li>Developed MATLAB/Simulink pack models using measured impedance and transient equivalent-circuit behavior to evaluate performance under load.</li>
+        <li>Designed and compared 24s2p and 16s5p Li-ion architectures.</li>
+      </ul>
+      <h3>Result</h3>
+      <table class="spec">
+        <tr><th scope="row">Dataset</th><td>16,000+ experimental data points</td></tr>
+        <tr><th scope="row">Pulse-induced SoC drift</th><td>Held below 1%</td></tr>
+        <tr><th scope="row">Model parameters</th><td>R<sub>0</sub>, R<sub>1</sub>, C<sub>1</sub></td></tr>
+        <tr><th scope="row">Selected architecture</th><td>24s2p, for higher pack voltage and lower weight</td></tr>
+      </table>
+      <ul class="tags" aria-label="Skills"><li>Python</li><li>MATLAB/Simulink</li><li>Battery Modeling</li></ul>
+    </div>
+    <figure>
+      <div class="viz" id="v-pack" tabindex="0" role="img" aria-label="3D model of a lithium-ion cell layout. Drag to rotate.">
+        <span class="hint">Drag to rotate</span>
+      </div>
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Pack architecture">
+          <button type="button" data-cfg="24,2" aria-pressed="true">24s2p</button>
+          <button type="button" data-cfg="16,5" aria-pressed="false">16s5p</button>
+        </div>
+      </div>
+      <dl class="packstats" aria-live="polite">
+        <div><dt>Cells</dt><dd id="ps-cells">48</dd></div>
+        <div><dt>Pack voltage vs 16s</dt><dd id="ps-volt">1.5×</dd></div>
+        <div><dt>Cell mass vs 16s5p</dt><dd id="ps-mass">0.6×</dd></div>
+      </dl>
+      <figcaption>Ratios assume the same cell in both layouts. More cells in series raises pack voltage; fewer cells overall cuts weight.</figcaption>
+    </figure>
+  </section>
+
+  <!-- UF IoT -->
+  <section class="work flip" id="iot" aria-labelledby="h-iot">
+    <div class="text">
+      <p class="org">UF IoT Student Club, Gainesville, FL</p>
+      <h2 id="h-iot">An FPGA trading-signal workshop</h2>
+      <p class="role">Chair of Events &amp; Technical Workshops. Aug. 2026 to present.</p>
+      <h3>Action</h3>
+      <ul class="act">
+        <li>Built a working moving-average buy/sell trading-signal design on a Tang Nano FPGA as the hands-on reference for a quantitative-finance workshop.</li>
+        <li>Led the FPGA workshop ahead of a quantitative-finance hackathon, guiding participants from working examples to their own hardware implementations.</li>
+        <li>Organized a research panel connecting undergraduates with PhD researchers in hardware, embedded systems and neuromorphic devices.</li>
+      </ul>
+      <h3>Result</h3>
+      <table class="spec">
+        <tr><th scope="row">Workshop</th><td>32+ students</td></tr>
+        <tr><th scope="row">Research panel</th><td>40+ undergraduates</td></tr>
+        <tr><th scope="row">Reference design</th><td>Moving-average signal on Tang Nano FPGA</td></tr>
+      </table>
+      <ul class="tags" aria-label="Skills"><li>VHDL</li><li>FPGA Prototyping</li><li>Digital Logic</li></ul>
+    </div>
+    <figure>
+      <div class="viz" id="v-fpga" tabindex="0" role="img" aria-label="3D model of an FPGA development board whose LEDs show the current signal. Drag to rotate.">
+        <span class="hint">Drag to rotate</span>
+      </div>
+      <div class="viz sig3d" id="v-sig" tabindex="0" role="img" aria-label="3D view of the price series, the short and long moving averages, the shaded band between them, and cones marking buy and sell crossovers. Drag to rotate.">
+        <span class="hint">Drag to rotate</span>
+      </div>
+      <p class="sigcap">The same signal in 3D. The band between the averages turns dark while the short average is above the long one (buy) and light while it is below (sell). Dark cones mark buy crossovers, white cones mark sells.</p>
+      <div class="chart">
+        <canvas id="ma" aria-label="Price series with short and long moving averages and buy and sell markers" role="img"></canvas>
+        <div class="legend"><span><i class="p"></i>Price</span><span><i></i>Short average</span><span><i class="l"></i>Long average</span><span>▲ Buy &nbsp; △ Sell</span></div>
+      </div>
+      <div class="controls">
+        <label for="sn">Short window <input id="sn" type="range" min="3" max="20" value="8"> <b id="snv">8</b></label>
+        <label for="ln">Long window <input id="ln" type="range" min="21" max="60" value="30"> <b id="lnv">30</b></label>
+        <button class="btn" id="stream" type="button">Stream new prices</button>
+      </div>
+      <p class="readout" id="sig" aria-live="polite"></p>
+      <figcaption>A browser version of the logic in the workshop design: when the short average crosses above the long one it signals buy, and the board's LEDs light up. Prices here are randomly generated.</figcaption>
+    </figure>
+  </section>
+
+  <section class="band" id="skills" aria-labelledby="h-skills">
+    <h2 id="h-skills">Technical skills</h2>
+    <dl class="skills">
+      <div><dt>Digital &amp; EDA</dt><dd>VHDL, Tang Nano FPGA, Quartus, Logisim, LTspice, Altium Designer, KLayout, WaveForms</dd></div>
+      <div><dt>Programming &amp; Modeling</dt><dd>Python (NumPy, Pandas), MATLAB, Simulink, Simscape Battery, Git/GitHub</dd></div>
+      <div><dt>Semiconductor Fab &amp; Test</dt><dd>Photolithography, Mask Alignment, Wet (BOE) &amp; Dry (RIE) Etching, Thermal Oxidation, Thermal Evaporation, Liftoff, Annealing, Profilometry, Probe Station Measurement</dd></div>
+      <div><dt>Hardware Design</dt><dd>FPGA Prototyping, Digital Logic, Battery Modeling</dd></div>
+      <div><dt>Device Characterization</dt><dd>Device Testing, Ferroelectrics, Reliability Analysis</dd></div>
+      <div><dt>Certifications</dt><dd>HF Training, Hazardous Waste Management, Radiation Safety Training</dd></div>
+    </dl>
+  </section>
+
+  <section class="band" aria-labelledby="h-edu">
+    <h2 id="h-edu">Education</h2>
+    <div class="edu">
+      <div>
+        <h3>University of Florida</h3>
+        <p>B.S. in Electrical and Electronics Engineering. Expected Graduation Date: May 2029. GPA 3.59/4.00.</p>
+        <p>Coursework: Digital Logic, Circuits I, Differential Equations, Calculus I–III, Physics I–II.</p>
+      </div>
+      <div>
+        <h3>Colégio Santo Inácio, Rio de Janeiro</h3>
+        <p>High School Diploma, top 5%. Dec. 2024.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <p><a href="mailto:alejandropose@outlook.com">alejandropose@outlook.com</a></p>
+    <p><a href="https://www.linkedin.com/in/alejandro-pose-santana-019452268" target="_blank" rel="noopener">linkedin.com/in/alejandro-pose-santana-019452268</a></p>
+    <p><a href="https://github.com/Alejandro110507" target="_blank" rel="noopener">github.com/Alejandro110507</a></p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#5e646b";
+
+/* ---------- shared 3D viewer ---------- */
+function viewer(el, o){
+  o = Object.assign({cam:[4.2,3.2,5], look:[0,0,0], fov:32, spin:true, ry:-0.5, rx:0}, o||{});
+  if (!window.THREE){ el.insertAdjacentHTML("beforeend",'<p class="fallback">The 3D view could not load. The rest of the page works normally.</p>'); return null; }
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({antialias:true, alpha:true}); }
+  catch(e){ el.insertAdjacentHTML("beforeend",'<p class="fallback">This browser has WebGL turned off, so the 3D view is hidden.</p>'); return null; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+  el.insertBefore(renderer.domElement, el.firstChild);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(o.fov, 1, 0.1, 100);
+  camera.position.set(...o.cam); camera.lookAt(...o.look);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xaeb4ba, 0.95));
+  const key = new THREE.DirectionalLight(0xffffff, 0.75); key.position.set(3,7,4); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.25); rim.position.set(-5,2,-4); scene.add(rim);
+  const root = new THREE.Group(); scene.add(root);
+  let rx=o.rx, ry=o.ry, drag=false, lx=0, ly=0, visible=false, running=false;
+  const ticks=[];
+  el.addEventListener("pointerdown", e=>{ drag=true; lx=e.clientX; ly=e.clientY; try{el.setPointerCapture(e.pointerId);}catch(_){} });
+  el.addEventListener("pointermove", e=>{ if(!drag) return; ry += (e.clientX-lx)*0.01; rx += (e.clientY-ly)*0.006; rx=Math.max(-0.45,Math.min(0.7,rx)); lx=e.clientX; ly=e.clientY; });
+  const stop=()=>{drag=false;}; el.addEventListener("pointerup",stop); el.addEventListener("pointercancel",stop);
+  el.addEventListener("keydown", e=>{
+    if(e.key==="ArrowLeft"){ry-=0.15;e.preventDefault();}
+    else if(e.key==="ArrowRight"){ry+=0.15;e.preventDefault();}
+    else if(e.key==="ArrowUp"){rx=Math.max(-0.45,rx-0.1);e.preventDefault();}
+    else if(e.key==="ArrowDown"){rx=Math.min(0.7,rx+0.1);e.preventDefault();}
+  });
+  function size(){ const w=el.clientWidth, h=el.clientHeight; if(!w||!h) return; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+  if (window.ResizeObserver) new ResizeObserver(size).observe(el); else window.addEventListener("resize", size);
+  size();
+  function frame(t){
+    if(!visible){ running=false; return; }
+    if(o.spin && !reduce && !drag) ry += 0.0022;
+    root.rotation.set(rx, ry, 0);
+    for(const f of ticks) f(t);
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  const io = new IntersectionObserver(es=>{ visible = es[0].isIntersecting; if(visible && !running){ running=true; requestAnimationFrame(frame);} }, {rootMargin:"100px"});
+  io.observe(el);
+  return {scene, root, camera, tick:f=>ticks.push(f)};
+}
+function mat(color, x){ x=x||{}; return new THREE.MeshStandardMaterial({color, roughness:x.r!=null?x.r:0.55, metalness:x.m!=null?x.m:0.05, transparent:x.o!=null, opacity:x.o!=null?x.o:1, emissive:x.e||0x000000}); }
+function solid(geo, color, x){
+  x=x||{};
+  const m = new THREE.Mesh(geo, mat(color, x));
+  if(x.edge!==false){
+    const e = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({color:x.ec||0x5e646b, transparent:true, opacity:x.eo!=null?x.eo:0.5}));
+    m.add(e);
+  }
+  return m;
+}
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d);
+
+/* ---------- hero chip ---------- */
+(function(){
+  const v = viewer(document.getElementById("v-hero"), {cam:[6.2,4.8,6.2], ry:-0.4, fov:34});
+  if(!v) return;
+  const g = new THREE.Group(); v.root.add(g);
+  const board = solid(B(5.2,0.08,5.2), 0xf3f4f5, {eo:0.25}); board.position.y=-0.32; g.add(board);
+  // board traces
+  const tr = new THREE.LineBasicMaterial({color:0xb7bcc2});
+  for(let i=0;i<14;i++){
+    const s=-1.45+i*0.223, side=i%4;
+    const pts = [];
+    const f = 2.5;
+    if(side===0) pts.push(new THREE.Vector3(s,-0.27,1.75), new THREE.Vector3(s,-0.27,2.1), new THREE.Vector3(s*1.25,-0.27,f));
+    if(side===1) pts.push(new THREE.Vector3(s,-0.27,-1.75), new THREE.Vector3(s,-0.27,-2.1), new THREE.Vector3(s*1.25,-0.27,-f));
+    if(side===2) pts.push(new THREE.Vector3(1.75,-0.27,s), new THREE.Vector3(2.1,-0.27,s), new THREE.Vector3(f,-0.27,s*1.25));
+    if(side===3) pts.push(new THREE.Vector3(-1.75,-0.27,s), new THREE.Vector3(-2.1,-0.27,s), new THREE.Vector3(-f,-0.27,s*1.25));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), tr));
+  }
+  const pkg = solid(B(3,0.34,3), 0x3c4147, {r:0.7, ec:0x1f2328, eo:0.6}); pkg.position.y=-0.1; g.add(pkg);
+  const lid = solid(B(1.9,0.05,1.9), 0xc9ced3, {m:0.55, r:0.3, eo:0.4}); lid.position.y=0.095; g.add(lid);
+  const die = solid(B(1.2,0.05,1.2), 0x8e959c, {m:0.3, r:0.35, eo:0.7, ec:0x3c4147}); die.position.y=0.14; g.add(die);
+  const gl = new THREE.LineBasicMaterial({color:0xe6e8ea, transparent:true, opacity:0.9});
+  for(let i=1;i<6;i++){
+    const t=-0.6+i*0.2;
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(t,0.167,-0.6),new THREE.Vector3(t,0.167,0.6)]), gl));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.6,0.167,t),new THREE.Vector3(0.6,0.167,t)]), gl));
+  }
+  const pinG = B(0.11,0.05,0.34), pinM = mat(0xb5bac0,{m:0.75,r:0.3});
+  for(let i=0;i<12;i++){
+    const s=-1.32+i*0.24;
+    [[s,1.62,0],[s,-1.62,0],[1.62,s,1],[-1.62,s,1]].forEach(([a,b,rot])=>{
+      const p=new THREE.Mesh(pinG,pinM);
+      if(rot){ p.rotation.y=Math.PI/2; p.position.set(a,-0.24,b); } else p.position.set(a,-0.24,b);
+      g.add(p);
+    });
+  }
+  v.tick(t=>{ g.position.y = reduce?0:Math.sin(t*0.0011)*0.05; });
+})();
+
+/* ---------- MFM capacitor + hysteresis ---------- */
+(function(){
+  const v = viewer(document.getElementById("v-mfm"), {cam:[5.1,4.1,5.6], ry:-0.55, fov:30});
+  const dip=[];
+  if(v){
+    const g=v.root;
+    const sub=solid(B(3.2,0.36,3.2),0xe4e7ea,{eo:0.35}); sub.position.y=-0.38; g.add(sub);
+    const be=solid(B(2.6,0.1,2.6),0x9aa0a7,{m:0.45,r:0.35}); be.position.y=-0.15; g.add(be);
+    const hz=solid(B(2.6,0.36,2.6),0xd3d8dd,{o:0.45,eo:0.6}); hz.position.y=0.08; g.add(hz);
+    const padG=new THREE.CylinderGeometry(0.3,0.3,0.1,40);
+    for(const x of [-0.8,0,0.8]) for(const z of [-0.8,0,0.8]){ const p=solid(padG,0x70767d,{m:0.55,r:0.3,eo:0.3}); p.position.set(x,0.31,z); g.add(p); }
+    const cg=new THREE.ConeGeometry(0.055,0.2,12), cm=mat(0x2a2f35,{r:0.5});
+    for(let i=0;i<7;i++) for(let j=0;j<7;j++){ const c=new THREE.Mesh(cg,cm); c.position.set(-1.05+i*0.35,0.08,-1.05+j*0.35); g.add(c); dip.push(c); }
+  }
+  const svg=document.getElementById("pe"), NS="http://www.w3.org/2000/svg";
+  const Ec=0.35, w=0.14, up=E=>Math.tanh((E-Ec)/w), dn=E=>Math.tanh((E+Ec)/w);
+  const X=E=>160+E*130, Y=P=>105-P*82;
+  let d="";
+  for(let i=0;i<=120;i++){ const E=-1+i/60; d+=(i?"L":"M")+X(E).toFixed(1)+" "+Y(up(E)).toFixed(1); }
+  for(let i=0;i<=120;i++){ const E=1-i/60; d+="L"+X(E).toFixed(1)+" "+Y(dn(E)).toFixed(1); }
+  svg.innerHTML =
+    `<line x1="20" y1="105" x2="300" y2="105" stroke="${tok('--rule')}" stroke-width="1"/>`+
+    `<line x1="160" y1="12" x2="160" y2="198" stroke="${tok('--rule')}" stroke-width="1"/>`+
+    `<path d="${d}Z" fill="${tok('--mist')}" stroke="${tok('--graphite')}" stroke-width="1.6"/>`+
+    `<text x="298" y="98" text-anchor="end" font-size="12" fill="${tok('--graphite')}">E</text>`+
+    `<text x="168" y="22" font-size="12" fill="${tok('--graphite')}">P</text>`+
+    `<circle id="pe-dot" r="6" fill="${tok('--ink')}" stroke="#fff" stroke-width="2"/>`;
+  const dot=svg.querySelector("#pe-dot"), read=document.getElementById("pe-read"), slider=document.getElementById("efield");
+  let E=0, P=up(0);
+  function render(){
+    dot.setAttribute("cx",X(E)); dot.setAttribute("cy",Y(P));
+    for(const c of dip){ c.rotation.z = P>=0?0:Math.PI; c.scale.set(1,0.35+0.65*Math.abs(P),1); }
+    const state = Math.abs(P)<0.25 ? "switching" : (P>0 ? "polarized up" : "polarized down");
+    read.innerHTML = `Field <b>${E>=0?"+":""}${E.toFixed(2)}</b> (normalized). Polarization <b>${P>=0?"+":""}${P.toFixed(2)}</b>, ${state}.`;
+  }
+  function setE(nE){ if(nE>E) P=Math.max(P,up(nE)); else if(nE<E) P=Math.min(P,dn(nE)); E=nE; render(); }
+  slider.addEventListener("input",()=>setE(slider.value/100));
+  let anim=null;
+  document.getElementById("sweep").addEventListener("click",()=>{
+    if(anim) cancelAnimationFrame(anim);
+    const path=[E,1,-1,0]; let seg=0, t0=null;
+    if(reduce){ setE(1); setE(-1); setE(0); slider.value=0; return; }
+    function step(t){
+      if(t0===null) t0=t;
+      const dur=Math.abs(path[seg+1]-path[seg])*900+1;
+      const k=Math.min(1,(t-t0)/dur);
+      const nE=path[seg]+(path[seg+1]-path[seg])*k;
+      setE(nE); slider.value=Math.round(nE*100);
+      if(k>=1){ seg++; t0=t; if(seg>=path.length-1){anim=null;return;} }
+      anim=requestAnimationFrame(step);
+    }
+    anim=requestAnimationFrame(step);
+  });
+  render();
+})();
+
+/* ---------- Fabrication process flow ---------- */
+(function(){
+  const STEPS=[
+    ["Oxidation","Thermal oxidation","Grew 40 nm of dry thermal SiO₂ at 1000 °C, with thickness verified by Filmetrics."],
+    ["Litho","Lithography","Patterned AZ1512 positive and nLOF2035 negative resists on a Suss MJB3 mask aligner."],
+    ["Etch","Oxide etch","Opened windows in the oxide with 6:1 BOE and SF₆ reactive ion etching."],
+    ["Metal","Metallization","Evaporated aluminum at about 10⁻⁴ Torr over the patterned wafer."],
+    ["Liftoff","Liftoff","Dissolved the resist, lifting off excess metal and leaving defined contacts."],
+    ["Anneal","Anneal","Annealed at 550 °C in N₂ to form stable contacts."],
+    ["Probe","Electrical test","Probed MOSCAP capacitance and TLM resistance to validate device and contact quality."]
+  ];
+  const v = viewer(document.getElementById("v-fab"), {cam:[4.3,3.1,4.9], look:[0,-0.05,0], ry:-0.6, rx:0.05, fov:32, spin:false});
+  let parts=null;
+  if(v){
+    const g=v.root; const W=3.2, D=2, win=0.9, side=(W-win)/2, sx=win/2+side/2;
+    const si=solid(B(W,0.8,D),0x6f767e,{r:0.6,eo:0.4}); si.position.y=-0.4; g.add(si);
+    const oxL=solid(B(side,0.09,D),0xeceef0,{eo:0.5}); oxL.position.set(-sx,0.045,0);
+    const oxR=oxL.clone(); oxR.position.x=sx;
+    const oxC=solid(B(win,0.09,D),0xeceef0,{eo:0.5}); oxC.position.set(0,0.045,0);
+    const rL=solid(B(side,0.24,D),0x7e858c,{o:0.85,eo:0.5}); rL.position.set(-sx,0.21,0);
+    const rR=rL.clone(); rR.position.x=sx;
+    const pad=solid(B(win,0.11,D),0xc4c9ce,{m:0.75,r:0.28,eo:0.5}); pad.position.set(0,0.055,0);
+    const aL=solid(B(side,0.06,D),0xc4c9ce,{m:0.75,r:0.28,eo:0.5}); aL.position.set(-sx,0.36,0);
+    const aR=aL.clone(); aR.position.x=sx;
+    const inter=solid(B(win,0.025,D),0x50565d,{eo:0.2}); inter.position.set(0,-0.012,0);
+    const probe=new THREE.Group();
+    const tip=solid(new THREE.ConeGeometry(0.05,0.55,16),0x3c4147,{m:0.6,r:0.3,eo:0.2}); tip.rotation.x=Math.PI; tip.position.y=0.4;
+    const arm=solid(new THREE.CylinderGeometry(0.035,0.035,1.4,12),0x3c4147,{m:0.6,eo:0.2}); arm.rotation.z=Math.PI/2.6; arm.position.set(0.55,0.95,0);
+    probe.add(tip,arm); probe.position.set(0,0.12,0.2);
+    [oxL,oxR,oxC,rL,rR,pad,aL,aR,inter,probe].forEach(o=>g.add(o));
+    parts={oxL,oxR,oxC,rL,rR,pad,aL,aR,inter,probe};
+    v.tick(t=>{ if(parts.probe.visible && !reduce) parts.probe.position.y = 0.12 + Math.abs(Math.sin(t*0.002))*0.08; });
+  }
+  const list=document.getElementById("steps"), note=document.getElementById("stepnote");
+  STEPS.forEach((s,i)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`<button type="button"><span class="n">${i+1}</span>${s[0]}</button>`;
+    li.firstChild.addEventListener("click",()=>go(i));
+    list.appendChild(li);
+  });
+  let cur=0;
+  function go(i){
+    cur=Math.max(0,Math.min(STEPS.length-1,i));
+    list.querySelectorAll("button").forEach((b,k)=>{ b.toggleAttribute("aria-current",k===cur); if(k===cur) b.setAttribute("aria-current","step"); b.classList.toggle("done",k<cur); });
+    note.innerHTML=`<b>Step ${cur+1} of ${STEPS.length}: ${STEPS[cur][1]}.</b> ${STEPS[cur][2]}`;
+    document.getElementById("prev").disabled = cur===0;
+    document.getElementById("next").disabled = cur===STEPS.length-1;
+    if(parts){
+      const s=cur;
+      parts.oxL.visible=parts.oxR.visible=true;
+      parts.oxC.visible = s<2;
+      parts.rL.visible=parts.rR.visible = s>=1 && s<4;
+      parts.pad.visible = s>=3;
+      parts.aL.visible=parts.aR.visible = s===3;
+      parts.inter.visible = s>=5;
+      parts.pad.material.color.setHex(s>=5?0xaeb4ba:0xc4c9ce);
+      parts.probe.visible = s>=6;
+    }
+  }
+  document.getElementById("prev").addEventListener("click",()=>go(cur-1));
+  document.getElementById("next").addEventListener("click",()=>go(cur+1));
+  go(0);
+})();
+
+/* ---------- Battery pack ---------- */
+(function(){
+  const v = viewer(document.getElementById("v-pack"), {cam:[0,4.6,5.4], ry:-0.35, rx:0, fov:32});
+  const holder = v ? new THREE.Group() : null;
+  if(v) v.root.add(holder);
+  const cellG = v ? new THREE.CylinderGeometry(0.13,0.13,0.62,24) : null;
+  const capG = v ? new THREE.CylinderGeometry(0.07,0.07,0.03,16) : null;
+  function build(s,p){
+    if(!v) return;
+    while(holder.children.length){ const c=holder.children.pop(); c.traverse(o=>{ if(o.geometry && o.geometry!==cellG && o.geometry!==capG) o.geometry.dispose(); }); }
+    const sp=0.31, W=s*sp, D=p*sp;
+    const cellM=mat(0xd2d6db,{r:0.45,m:0.15}), capA=mat(0x3c4147,{m:0.4}), capB=mat(0xe9ebed,{m:0.4}), busM=mat(0xb5bac0,{m:0.6,r:0.35});
+    const base=solid(B(W+0.3,0.08,D+0.3),0xeef0f2,{eo:0.4}); base.position.y=-0.35; holder.add(base);
+    for(let i=0;i<s;i++){
+      for(let j=0;j<p;j++){
+        const x=-W/2+sp/2+i*sp, z=-D/2+sp/2+j*sp;
+        const c=new THREE.Mesh(cellG,cellM); c.position.set(x,0,z); holder.add(c);
+        const cap=new THREE.Mesh(capG, i%2?capB:capA); cap.position.set(x,0.325,z); holder.add(cap);
+      }
+      if(i%2===0 && i+1<s){
+        const bus=new THREE.Mesh(B(sp*2-0.06,0.02,D-0.06),busM);
+        bus.position.set(-W/2+sp+i*sp,0.35,0); holder.add(bus);
+      }
+    }
+    const k=4.2/Math.max(W,D*1.7);
+    holder.scale.setScalar(k);
+  }
+  const btns=[...document.querySelectorAll("#gator .seg button")];
+  const cells=document.getElementById("ps-cells"), volt=document.getElementById("ps-volt"), mass=document.getElementById("ps-mass");
+  function pick(btn){
+    btns.forEach(b=>b.setAttribute("aria-pressed", b===btn?"true":"false"));
+    const [s,p]=btn.dataset.cfg.split(",").map(Number);
+    build(s,p);
+    cells.textContent = s*p;
+    volt.textContent = (s/16).toFixed(1).replace(/\.0$/,"") + "×";
+    mass.textContent = (s*p/80).toFixed(1).replace(/\.0$/,"") + "×";
+  }
+  btns.forEach(b=>b.addEventListener("click",()=>pick(b)));
+  pick(btns[0]);
+})();
+
+/* ---------- FPGA board + moving average ---------- */
+(function(){
+  const v = viewer(document.getElementById("v-fpga"), {cam:[4.1,3.4,4.7], ry:-0.5, fov:32});
+  const leds=[];
+  if(v){
+    const g=v.root;
+    const pcb=solid(B(3.6,0.08,1.5),0xdfe2e5,{eo:0.45}); g.add(pcb);
+    const chip=solid(B(0.8,0.1,0.8),0x3b4046,{r:0.6,ec:0x1f2328}); chip.position.set(-0.15,0.09,0); g.add(chip);
+    const mark=solid(new THREE.CylinderGeometry(0.05,0.05,0.005,16),0x8e959c,{edge:false}); mark.position.set(-0.45,0.143,-0.3); g.add(mark);
+    const usb=solid(B(0.32,0.14,0.42),0xb5bac0,{m:0.8,r:0.3}); usb.position.set(-1.68,0.11,0); g.add(usb);
+    const pinM=mat(0x9aa0a7,{m:0.7,r:0.3}), pinG=B(0.05,0.16,0.05), hdrM=mat(0x4a4f55,{});
+    for(const z of [-0.62,0.62]){
+      const hdr=new THREE.Mesh(B(3.05,0.08,0.11),hdrM); hdr.position.set(0.1,0.08,z); g.add(hdr);
+      for(let i=0;i<24;i++){ const p=new THREE.Mesh(pinG,pinM); p.position.set(-1.35+i*0.127,0.16,z); g.add(p); }
+    }
+    for(let i=0;i<6;i++){
+      const m=mat(0x50565d,{r:0.4});
+      const l=new THREE.Mesh(B(0.1,0.05,0.07),m); l.position.set(0.65+i*0.17,0.065,0.32); g.add(l); leds.push(l);
+    }
+    const btn=solid(new THREE.CylinderGeometry(0.07,0.07,0.06,16),0x2a2f35,{eo:0.2}); btn.position.set(1.35,0.07,-0.3); g.add(btn);
+  }
+  const sv = viewer(document.getElementById("v-sig"), {cam:[0,1.8,8.1], look:[0,0.05,0], ry:-0.22, rx:0.08, fov:34, spin:false});
+  let sg=null;
+  if(sv){
+    const grid=new THREE.GridHelper(7,14,0xc4c9ce,0xdfe2e5); grid.position.y=-1.35; sv.root.add(grid);
+    const back=solid(B(7,2.7,0.02),0xf6f7f8,{eo:0.35}); back.position.set(0,0,-0.9); sv.root.add(back);
+    sg=new THREE.Group(); sv.root.add(sg);
+  }
+  const coneG = sv ? new THREE.ConeGeometry(0.09,0.24,20) : null;
+  const buyM = sv ? mat(0x2a2f35,{r:0.4,m:0.2}) : null, sellM = sv ? mat(0xffffff,{r:0.4}) : null;
+  const priceM = sv ? mat(0xa3a9b0,{r:0.5}) : null, shortM = sv ? mat(0x2a2f35,{r:0.35,m:0.2}) : null, longM = sv ? mat(0x7a8087,{r:0.4,m:0.2}) : null;
+  const bandBuy = sv ? new THREE.MeshStandardMaterial({color:0x4a4f55,transparent:true,opacity:0.55,side:THREE.DoubleSide,roughness:0.6}) : null;
+  const bandSell = sv ? new THREE.MeshStandardMaterial({color:0xd5d9dd,transparent:true,opacity:0.75,side:THREE.DoubleSide,roughness:0.6}) : null;
+  const dropM = sv ? new THREE.LineBasicMaterial({color:0x9aa0a7,transparent:true,opacity:0.7}) : null;
+  function build3d(S,Lg,sigs,lo,hi){
+    if(!sg) return;
+    while(sg.children.length){ const c=sg.children.pop(); c.traverse(o=>{ if(o.geometry && o.geometry!==coneG) o.geometry.dispose(); }); }
+    const X3=i=>-3.3+i*6.6/(N-1), Y3=p=>-1.15+(p-lo)/(hi-lo)*2.4;
+    const tube=(arr,m,r,z)=>{ const pts=[]; for(let i=0;i<shown;i++) if(arr[i]!=null) pts.push(new THREE.Vector3(X3(i),Y3(arr[i]),z));
+      if(pts.length<2) return; const curve=new THREE.CatmullRomCurve3(pts); sg.add(new THREE.Mesh(new THREE.TubeGeometry(curve,Math.max(8,pts.length*2),r,8,false),m)); };
+    tube(price,priceM,0.018,-0.35);
+    tube(Lg,longM,0.032,0);
+    tube(S,shortM,0.04,0);
+    const vb=[], vs=[];
+    for(let i=0;i<shown-1;i++){
+      if(S[i]==null||Lg[i]==null||S[i+1]==null||Lg[i+1]==null) continue;
+      const x0=X3(i), x1=X3(i+1), a0=Y3(S[i]), a1=Y3(S[i+1]), b0=Y3(Lg[i]), b1=Y3(Lg[i+1]);
+      const q=[x0,a0,0, x1,a1,0, x1,b1,0, x0,a0,0, x1,b1,0, x0,b0,0];
+      ((S[i]+S[i+1])>(Lg[i]+Lg[i+1]) ? vb : vs).push(...q);
+    }
+    for(const [arr,m] of [[vb,bandBuy],[vs,bandSell]]){ if(!arr.length) continue; const g=new THREE.BufferGeometry(); g.setAttribute("position",new THREE.Float32BufferAttribute(arr,3)); g.computeVertexNormals(); sg.add(new THREE.Mesh(g,m)); }
+    for(const [i,t] of sigs){
+      const x=X3(i), y=Y3(S[i]), c=new THREE.Mesh(coneG, t>0?buyM:sellM);
+      c.position.set(x, y + (t>0?0.32:-0.32), 0.12); if(t<0) c.rotation.x=Math.PI;
+      if(t<0){ c.add(new THREE.LineSegments(new THREE.EdgesGeometry(coneG), new THREE.LineBasicMaterial({color:0x5e646b}))); }
+      sg.add(c);
+      sg.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,-1.35,0.12),new THREE.Vector3(x,y,0.12)]),dropM));
+    }
+  }
+  function setLeds(n){ leds.forEach((l,i)=>{ const on=i<n; l.material.color.setHex(on?0xffffff:0x50565d); l.material.emissive.setHex(on?0xb9c2cc:0x000000); }); }
+
+  const cv=document.getElementById("ma"), ctx=cv.getContext("2d");
+  const sn=document.getElementById("sn"), ln=document.getElementById("ln"), snv=document.getElementById("snv"), lnv=document.getElementById("lnv"), sig=document.getElementById("sig");
+  const N=180; let price=[], shown=N, streaming=null;
+  function gen(){
+    price=[]; let p=100, drift=0;
+    for(let i=0;i<N;i++){ drift = drift*0.92 + (Math.random()-0.5)*0.5; p += drift + (Math.random()-0.5)*1.1; price.push(p); }
+  }
+  function sma(n){ const out=new Array(N).fill(null); let s=0; for(let i=0;i<N;i++){ s+=price[i]; if(i>=n) s-=price[i-n]; if(i>=n-1) out[i]=s/n; } return out; }
+  function draw(){
+    const r=cv.getBoundingClientRect(), dpr=Math.min(2,window.devicePixelRatio||1);
+    if(!r.width) return;
+    cv.width=r.width*dpr; cv.height=r.height*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const w=r.width, h=r.height, pad=14;
+    ctx.clearRect(0,0,w,h);
+    const s=+sn.value, L=+ln.value, S=sma(s), Lg=sma(L);
+    const lo=Math.min(...price)-2, hi=Math.max(...price)+2;
+    const X=i=>pad+i*(w-2*pad)/(N-1), Y=p=>h-pad-(p-lo)/(hi-lo)*(h-2*pad);
+    ctx.strokeStyle=tok("--fog"); ctx.lineWidth=1;
+    for(let k=1;k<4;k++){ const y=pad+k*(h-2*pad)/4; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke(); }
+    const line=(arr,color,wd,dash)=>{ ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=color; ctx.lineWidth=wd; let st=false;
+      for(let i=0;i<shown;i++){ if(arr[i]==null) continue; const x=X(i), y=Y(arr[i]); if(!st){ctx.moveTo(x,y);st=true;} else ctx.lineTo(x,y);} ctx.stroke(); ctx.setLineDash([]); };
+    line(price,tok("--steel"),1.5);
+    line(Lg,tok("--graphite"),2,[6,4]);
+    line(S,tok("--ink"),2);
+    let last=null, lastIdx=-1, count=0; const sigs=[];
+    for(let i=1;i<shown;i++){
+      if(S[i]==null||Lg[i]==null||S[i-1]==null||Lg[i-1]==null) continue;
+      const a=S[i-1]-Lg[i-1], b=S[i]-Lg[i];
+      if(a<=0 && b>0){ tri(X(i),Y(price[i])+12,true); last="buy"; lastIdx=i; count++; sigs.push([i,1]); }
+      else if(a>=0 && b<0){ tri(X(i),Y(price[i])-12,false); last="sell"; lastIdx=i; count++; sigs.push([i,-1]); }
+    }
+    function tri(x,y,up){ ctx.beginPath(); if(up){ctx.moveTo(x,y-6);ctx.lineTo(x-6,y+5);ctx.lineTo(x+6,y+5);} else {ctx.moveTo(x,y+6);ctx.lineTo(x-6,y-5);ctx.lineTo(x+6,y-5);} ctx.closePath();
+      if(up){ctx.fillStyle=tok("--ink");ctx.fill();} else {ctx.fillStyle="#fff";ctx.fill();ctx.strokeStyle=tok("--ink");ctx.lineWidth=1.5;ctx.stroke();} }
+    const i=shown-1, above = S[i]!=null && Lg[i]!=null ? S[i]>Lg[i] : null;
+    setLeds(above===null?0:(above?6:1));
+    build3d(S,Lg,sigs,lo,hi);
+    sig.innerHTML = above===null ? "Waiting for enough prices to fill the long window." :
+      `Current state: <b>${above?"Buy":"Sell"}</b>, short average ${above?"above":"below"} long. ${count} crossover${count===1?"":"s"} in this series. Board LEDs: ${above?"all on":"one on"}.`;
+  }
+  sn.addEventListener("input",()=>{ snv.textContent=sn.value; draw(); });
+  ln.addEventListener("input",()=>{ lnv.textContent=ln.value; draw(); });
+  document.getElementById("stream").addEventListener("click",()=>{
+    gen();
+    if(streaming) cancelAnimationFrame(streaming);
+    if(reduce){ shown=N; draw(); return; }
+    shown=2; let t0=null;
+    const step=t=>{ if(t0===null) t0=t; shown=Math.min(N,2+Math.floor((t-t0)/28)); draw(); if(shown<N) streaming=requestAnimationFrame(step); else streaming=null; };
+    streaming=requestAnimationFrame(step);
+  });
+  if(window.ResizeObserver) new ResizeObserver(()=>draw()).observe(cv); else window.addEventListener("resize",draw);
+  gen(); draw();
+})();
+
+})();
+</script>
+</body>
+</html>
